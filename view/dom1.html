@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dom1</title>
+</head>
+<body>
+
+<p id="demo"></p>
+<br/>
+<input type="button" value="点一下" onclick="f()" />
+
+
+
+<script>
+  document.getElementById("demo").innerHTML = "Hello Bear!";
+
+  function f() {
+    document.getElementById("demo").innerHTML = "How are you?";
+  }
+</script>
+
+
+</body>
+</html>

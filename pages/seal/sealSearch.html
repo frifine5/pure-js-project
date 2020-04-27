@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>印章查询</title>
+    <link rel="stylesheet" href="../../assert/css/global.css">
+    <script src="../../assert/js/jquery-3.5.0.js"></script>
+    <script src="../../assert/js/jquery.cookie.js"></script>
+
+</head>
+<body>
+    <div class="app">
+        <div class="module-name">
+            <span><a class="">印章查询</a></span>
+        </div>
+        <div class="module-search">
+            <div class="input-grp">
+                <div class="input-label">印章名称</div>
+                <input id="sealName" type="text" autocomplete="off" placeholder="" />
+            </div>
+            <div class="input-grp">
+                <div class="input-label">申请单位</div>
+                <input id="useUnit" type="text" autocomplete="off" placeholder="" />
+            </div>
+            <div class="input-grp pull-left no-border">
+                <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" onclick="resetCondition()"> 重置 </button>
+                <button class="btn-pri" style="font-size: 1em;" onclick="queryList()"> 查询 </button>
+            </div>
+        </div>
+
+        <div class="module-list">
+            <div>
+                <table>
+                    <thead>
+                        <tr class="th-grey">
+                            <td width="5%">序号</td>
+                            <td width="20%">印章名称</td>
+                            <td width="10%">印章编号</td>
+                            <td width="15%">使用单位</td>
+                            <td width="5%">有效性</td>
+                            <td width="15%">有效期</td>
+                            <td width="10%">操作</td>
+                        </tr>
+
+                    </thead>
+                    <tbody id="sealBody">
+
+                    </tbody>
+
+                    <tfoot id="seal-tfoot" >
+                        <tr class="th-grey">
+                            <td  >序号</td>
+                            <td  >印章名称</td>
+                            <td  >印章编号</td>
+                            <td  >使用单位</td>
+                            <td  >有效性</td>
+                            <td  >有效期</td>
+                            <td  >操作</td>
+                        </tr>
+                        <tr><td colspan="7`">&nbsp;</td></tr>
+                        <tr id="pc"></tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+<style>
+
+    .app{
+        float: left;
+        box-sizing: border-box;
+        position: absolute;
+        width: 80%;
+        padding-left: 20px;
+    }
+
+
+    .module-list{
+        padding: 10px 10px;
+        margin-top: 20px;
+        margin-left: 15px;
+        display: inline-block;
+        vertical-align: middle;
+        align-content: center;
+        text-align: center;
+        float: left;
+        width: 90%;
+
+    }
+
+
+
+    .th-grey{
+        background-color: #e9eaec;
+        font-weight: bold;
+    }
+
+</style>
+
+
+
+<script>
+
+  var sealList;
+  var searchConditon;
+
+  function loadSealList(data){
+
+    var fullData = data;
+    var list = fullData.list;
+    let pageNo = fullData.pageNo;
+    let pageSize = fullData.pageSize;
+    let total = fullData.total;
+
+    var pcDiv = "<td colspan='2'>" +
+    " 共<span>"+ total +"</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
+    " 第<span>"+pageNo+"</span>页 " +
+    " / 共<span>"+ Math.ceil(total/pageSize) +"</span>页 " +
+    "</td>" +
+    "<td colspan='5'>&nbsp;</td>"
+
+
+    var dataStr = "";
+    let listSize = list.length;
+    var sealTableBody = $("#sealBody");
+    var sealPc = $("#pc");
+
+    if(listSize > 0){
+      let i = 0;
+      for(; i<listSize; i++){
+        dataStr += "<tr>" +
+        "<td>"+(i+1)+"</td>" +
+        "<td>"+list[i].sealName+"</td>" +
+        "<td>"+list[i].sealCode+"</td>" +
+        "<td>"+list[i].useUnit+"</td>" +
+        "<td>"+list[i].valid+"</td>" +
+        "<td>"+list[i].validSt +" - "+list[i].validEnd+"</td>" +
+        "<td>"+ "<button>查看</button>" + "<button>其它</button>" +"</td>" +
+
+        "</tr>"
+      }
+      sealTableBody.empty();
+      sealTableBody.prepend(dataStr);
+
+      sealPc.empty();
+      sealPc.prepend(pcDiv);
+    }else{
+      sealTableBody.empty();
+      sealTableBody.prepend("未查询到数据");
+    }
+
+
+
+
+  }
+
+
+
+  /**重置查询条件
+   * */
+  function resetCondition(){
+    $("#sealName").empty();
+    $("#useUnit").empty();
+    queryList();
+  }
+
+
+  /** 查询印章
+   * */
+  function queryList(){
+    var userToken = $.cookie('userToken');
+    var sealName = $("#sealName").val();
+    var useUnit = $("#useUnit").val();
+    var req = {
+      "token": userToken,
+      "sealName": undefined=== sealName? "": sealName,
+      "useUnit": undefined===useUnit?"":useUnit
+    };
+    let reqData = JSON.stringify(req);
+    console.log(reqData);
+    $.ajax({
+      url: "/Api/mock/view/v1/sealList.json",
+      type: 'post',
+      contentType: "application/json",
+      data: reqData,
+      dataType: 'json',
+      success: function (res) {
+        // console.log(res);
+        if (0 === res.code) {
+          var sealData = res.data;
+          // console.log(sealData);
+          loadSealList(sealData);
+
+        } else {
+          alert("查询印章失败：" + res.msg);
+        }
+      }
+    });
+
+  }
+
+
+</script>
+
+
+</html>

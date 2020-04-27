@@ -1,0 +1,157 @@
+
+
+body{
+    padding:0;
+    margin:0;
+    font:normal 12px/180% "SimSun-ExtB";
+    color: #333;
+    background: #fff;
+    text-align:center;
+
+}
+
+.wrap{
+    padding-top: 50px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+div{
+    text-align:center;
+    margin:0 auto;
+}
+
+i{
+    text-align: center;
+    display: none;
+    color:#80848f;
+    position:absolute;
+    right: 0;
+    z-index: 3;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+
+}
+
+@keyframes ani-load-loop {
+    0%{
+       transform: rotate(0);
+    }
+    50%{
+        transform: rotate(180deg);
+    }
+    100%{
+        transform: rotate(1turn);
+    }
+}
+
+.pull-right{
+    position: relative;
+    float: right;
+    vertical-align: middle;
+}
+.pull-left{
+    position: relative;
+    float: left;
+    vertical-align: middle;
+}
+
+ul li{
+    list-style-type:none;
+}
+
+
+.module-name{
+    font-size: 1.2em;
+    font-weight: 500;
+    color:#495060;
+    margin-top: 10px;
+    margin-left: 15px;
+    text-align: left;
+    border-bottom: 1px solid #2bb4d2;
+
+}
+
+.module-search {
+    padding: 10px 10px;
+    margin-top: 30px;
+    margin-left: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    align-content: left;
+    float: left;
+
+}
+
+
+
+
+.input-grp{
+    display: table;
+    /*width: 100%;*/
+    height: 35px;
+    border-collapse: separate;
+    position: relative;
+    top:1px;
+    padding: 0;
+    margin-right: 30px;
+    line-height: 1;
+    border-radius: 5px;
+    border: 1px solid #1abc9c;
+    text-align: left;
+    background-color: #f8f8f9;
+    vertical-align: middle;
+    float: left;
+}
+.input-label{
+    float: left;
+    text-align: center;
+    padding: 10px 10px;
+    vertical-align: middle;
+    border-right: 1px solid grey;
+
+}
+
+.input-grp input{
+    border: none;
+    /*float: left;*/
+    position: relative;
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    padding: 0 0 0 5px;
+    line-height: 1;
+    vertical-align: middle;
+    height: 35px;
+}
+
+
+.btn-pri {
+
+    padding: 2px 10px;
+    margin: 0;
+    height: inherit;
+    background-color: #004098;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 3px;
+    line-height: 2;
+    border: 0;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+    list-style: none;
+    vertical-align: middle;
+
+}
+
+.no-border{
+    border: none;
+    outline: none;
+}
+
+
+
+
+

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="../assert/css/global.css">
+    <script src="../assert/js/jquery-3.5.0.js"></script>
+    <script src="../assert/js/jquery.cookie.js"></script>
+
+</head>
+<body>
+<div class="main-head">
+    <div class="main-logo"> 演示系统主页</div>
+    <div class=""></div>
+    <div class="main-logo-right">
+        <button class="btn-main"><span onclick="bk2index()">退出</span></button>
+    </div>
+</div>
+
+<div class="main-wrap">
+    <div class="wrap-left">
+        <div id="menus">&nbsp;</div>
+
+    </div>
+    <div class="wrap-content" id="right-content"></div>
+
+</div>
+
+
+</body>
+
+<style>
+
+    .hide {
+        display: none;
+    }
+
+
+
+    .item-low {
+        background-color: #96B97d;
+        color: white;
+        line-height: 35px;
+    }
+
+    .item-high {
+        background-color:#00CCCC;
+        color: white;
+        line-height: 35px;
+    }
+
+    .wrap-content {
+        height: 600px;
+        /*width: 70%;*/
+        padding: 10px 30px 10px 10px;
+        font-size: 1.2em;
+        background: #fff;
+        float: left;
+    }
+
+    .wrap-left {
+        height: 600px;
+        width: 220px;
+        padding: 10px 0px 10px 10px;
+        float: left;
+        font-size: 1.2em;
+        background: #f1f1f1;
+        border-left: 1px white;
+    }
+
+    .main-wrap {
+        width: 100%;
+        line-height: 2;
+        background: #fff;
+        float: left;
+    }
+
+    .btn-main {
+
+        padding: 2px 8px;
+        margin: 0;
+        height: 2em;
+        background-color: #004098;
+        font-size: 16px;
+        color: #fff;
+        border-radius: 3px;
+        line-height: 2;
+        border: 0;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+        list-style: none;
+        vertical-align: middle;
+
+    }
+
+    .main-logo {
+        font-weight: 800;
+        font-size: 2em;
+        float: left;
+        margin-left: 35px;
+        color: #151515;
+
+    }
+
+    .main-logo-right {
+        font-weight: 800;
+        font-size: 2em;
+        float: right;
+        margin-right: 20px;
+        color: #151515;
+
+    }
+
+    .main-head {
+        height: 70px;
+        width: 100%;
+        line-height: 3;
+        background: #e0e0e0;
+        border-top: 2px solid #2bb4d2;
+        margin-bottom: 5px;
+
+    }
+
+
+</style>
+
+<script>
+  var menus;
+
+  window.onload = function () {
+    var userToken = $.cookie('userToken');
+
+    var req = {
+      "token": userToken
+    };
+    $.ajax({
+      url: "/Api/mock/view/v1/menus.json",
+      type: 'post',
+      contentType: "application/json",
+      data: JSON.stringify(req),
+      dataType: 'json',
+      success: function (res) {
+        console.log(res);
+        if (0 === res.code) {
+          menus = res.data;
+          var menuDiv = showMenu(menus);
+          // console.log(menuDiv);
+          document.getElementById("menus").innerHTML = menuDiv;
+        } else {
+          alert("加载菜单失败：" + res.msg);
+        }
+      }
+    });
+
+  }
+
+
+  function showMenu(data) {
+    var list = '';
+    let i = 0;
+    for (; i < data.length; i++) {
+      let menuId = data[i].menuId;
+      if (undefined === data[i].menuUri || data[i].menuUri == null || data[i].menuUri === '') {
+        // list += '<div class="header">'+ data[i].menuName+'</div>';
+      } else {
+        list += '<div class="item-low" ><a  onclick="chgRight(\''+data[i].menuUri+'\')" >' + data[i].menuName + '</a></div>';
+      }
+
+      if (null != data[i].children) {
+        list += '<div class="item">' +
+        '            <div class="item-high" id="' + menuId + '"  onclick="ChangeMenu(\'' + menuId + '\')">' + data[i].menuName + '>></div>' +
+        '            <div class="hide item-low">' + showMenu(data[i].children) + '</div> ' +
+        '        </div>';
+      }
+
+    }
+    return list;
+  }
+
+
+  function ChangeMenu(nid) {
+
+    var theDiv = document.getElementById(nid);
+    let item = theDiv.parentElement.children[1];
+    if(undefined === item){
+      return;
+    }
+
+    if (item.classList.contains('hide')) {
+      item.classList.remove('hide');
+    } else {
+      item.classList.add('hide');
+    }
+
+
+  }
+
+
+  function chgRight(uri){
+    console.log(uri);
+    $("#right-content").load(uri, function(){ $("#right-content").fadeIn(100);});
+  }
+
+  function bk2index() {
+    // 实际应清除登录缓存
+    // 这里简化
+    window.location.href = "/";
+  }
+
+</script>
+
+
+</html>

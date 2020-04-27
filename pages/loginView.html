@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" href="../assert/css/global.css">
+    <script src="../assert/js/jquery-3.5.0.js"></script>
+    <script src="../assert/js/jquery.cookie.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="wrap">
+        <div class="title-login">演示系统</div>
+        <div class="login">
+            <form class="form-login" onsubmit="return false" onclick="return false" autocomplete="off">
+                <div class="form-item">
+                    <label class="form-item-label" style="width:60px; ">用户账号</label>
+                    <div class="form-item-content">
+                        <i class="ani-load-loop"></i>
+                        <input id="uname" class="login-input" autocomplete="off" spellcheck="false" type="text"
+                               placeholder="请输入登录账号"/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label class="form-item-label" style="width:60px; ">用户密码</label>
+                    <div class="form-item-content">
+                        <i class="ani-load-loop"></i>
+                        <input id="upwd" class="login-input" autocomplete="off" spellcheck="false" type="password"
+                               placeholder="请输入登录密码"/>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <button class="btn-login" onclick="login()">登录</button>
+                </div>
+
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+<style>
+
+    .btn-login {
+        padding: 3px 5px;
+        margin: 0;
+        height: 50px;
+        background-color: #004098;
+        font-size: 20px;
+        color: #fff;
+        border-radius: 5px;
+        line-height: 2;
+        width: 45%;
+        border: 0;
+        list-style: none;
+        vertical-align: middle;
+
+    }
+
+    .login-input {
+        display: inline-block;
+        width: 100%;
+        height: 2em;
+        line-height: 2;
+        padding-left: 10px;
+    }
+
+    .form-item-content {
+        text-align: left;
+        margin-left: 60px;
+        position: relative;
+        vertical-align: middle;
+        line-height: 2;
+        padding: 10px 12px 10px 60px;
+    }
+
+    .form-item-label {
+        text-align: right;
+        vertical-align: middle;
+        float: left;
+        line-height: 2;
+        padding: 10px 12px 10px 0;
+
+    }
+
+    .form-item {
+        line-height: 1.5;
+        color: #495060;
+        margin-bottom: 20px;
+
+    }
+
+    .form-login {
+
+    }
+
+    .login {
+        width: 600px;
+        padding: 60px 100px 50px 100px;
+        font-size: 1.1em;
+        background: #fff;
+        box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+
+    }
+
+    .title-login {
+        font-size: 3em;
+        font-weight: bold;
+        color: #1c2438;
+        text-align: center;
+        box-sizing: border-box;
+        margin-bottom: 40px;
+
+    }
+
+
+</style>
+
+<script>
+  function login() {
+    var name = $("#uname").val();
+    var pwd = $("#upwd").val();
+
+    var req = {
+      "name": name,
+      "pwd": pwd
+    };
+
+    $.ajax({
+      url: "/Api/mock/view/v1/login.json",
+      type:'post',
+      contentType:"application/json",
+      data: JSON.stringify(req),
+      dataType: 'json',
+      success: function(res){
+        console.log(res);
+        if(0 === res.code){
+          $.cookie('userToken', res.data, { expires: 7, path: '/' });
+          // 跳转
+          window.location.href="main.html";
+        }else{
+          alert("登录失败：" + res.msg);
+        }
+      }
+    });
+
+
+  }
+
+
+</script>
+
+</html>
