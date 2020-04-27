@@ -220,4 +220,3 @@ function sm3(str) {
     return binary2hex(V);
 }
 
-export default sm3;
