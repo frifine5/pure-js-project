@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>印章申请表单</title>
+    <link rel="stylesheet" href="../../assert/css/global.css">
+    <script src="../../assert/js/jquery-3.5.0.js"></script>
+    <script src="../../assert/js/jquery.cookie.js"></script>
+
+</head>
+<body>
+<div class="app">
+    <div class="module-name">
+        <span><a class="">印章申请</a></span>
+    </div>
+    <div class="module-search">
+        <form id="sealRegForm1" onsubmit="return false" action="##" method="post">
+
+            <table width="900px;">
+                <tr>
+                    <td colspan="2">
+                        <div class="module-name">
+                            <span><a class="">使用单位信息 * </a></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">单位名称</div>
+                            <input id="useUnit" name="useUnit" type="text" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">统一社会信用代码</div>
+                            <input id="useUnitUCode" type="text" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">公司类型</div>
+                            <select style="height: inherit;  padding-top: 5px; border: none;" name="usnUnitType">
+                                <option value="00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请选择&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                <option value="01">有限责任公司</option>
+                                <option value="02">股份有限公司(非上市)</option>
+                                <option value="03">上市公司</option>
+                                <option value="99">其它</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">法定代表人</div>
+                            <input type="text" name="useUnitLegalPerson" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">联系电话</div>
+                            <input type="text" name="useUnitPhone" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="reg-form-table-input">
+                            <div class="input-label">公司邮箱</div>
+                            <input type="text" name="useUnitMail" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <div class="reg-form-table-input" style="width: 83.5%;">
+                            <div class="input-label">单位地址</div>
+                            <input type="text" name="useUnitAddress" autocomplete="off" placeholder=""/>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!--  印章信息 至少一条，多于一条可继续增加，也可后续增加 -->
+                <tr>
+                    <td colspan="2">
+                        <div class="module-name">
+                            <span><a class="">印章信息  </a></span>
+                            <span> | </span>
+                            <span>
+                                    <button class="btn" id="btn-seal-add">添加</button>
+                                </span>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="reg-form-table-input" style="width: 91.5%; height: 200px;">
+                            <table id="sealItemsTable"
+                                   style="border: 1px; width: 100%; height: 210px; text-align: center; vertical-align: middle; font-size: small;">
+                                <thead>
+                                <tr class="th-grey">
+                                    <td width="10%">印章名称</td>
+                                    <td width="8%">印章颜色</td>
+                                    <td width="10%">印章尺寸(宽mm)</td>
+                                    <td width="10%">印章尺寸(高mm)</td>
+                                    <td width="20%">有效期</td>
+                                    <td width="10%">操作</td>
+                                </tr>
+
+                                </thead>
+                                <tbody id="sealItemsBody">
+
+
+                                </tbody>
+
+
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td></td>
+                    <td style="text-align: right;">
+                        <div class="input-grp no-border" style="float: right; border: none; background: none;">
+                            <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" type="reset"> 重置
+                            </button>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <button class="btn-pri" style="font-size: 1em;" onclick="subRegFrom1()"> 提交</button>
+                        </div>
+                    </td>
+
+                </tr>
+
+            </table>
+
+
+        </form><!-- end of form sealRegForm1-->
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+
+<style>
+
+    .app {
+        float: left;
+        box-sizing: border-box;
+        position: absolute;
+        width: 80%;
+        padding-left: 20px;
+    }
+
+    .module-list {
+        padding: 10px 10px;
+        margin-top: 20px;
+        margin-left: 15px;
+        display: inline-block;
+        vertical-align: middle;
+        align-content: center;
+        text-align: center;
+        float: left;
+        /*width: 90%;*/
+
+    }
+
+    .reg-form-table-input {
+        display: table;
+        /*width: 100%;*/
+        height: 28px;
+        border-collapse: separate;
+        position: relative;
+        top: 1px;
+        padding: 0;
+        margin-left: 30px;
+        margin-right: 30px;
+        line-height: 1;
+        border-radius: 5px;
+        border: 1px solid #1abc9c;
+        text-align: left;
+        /*background-color: #f8f8f9;*/
+        vertical-align: middle;
+        float: left;
+
+    }
+
+    .reg-form-table-input input {
+        border: none;
+        position: relative;
+        border-bottom-left-radius: 0 !important;
+        border-top-left-radius: 0 !important;
+        padding: 1px 0 -1px 5px;
+        line-height: 1;
+        vertical-align: middle;
+        height: 28px;
+    }
+
+    .reg-form-table-input .input-label {
+        width: 120px;
+        padding: 10px 0px;
+    }
+
+    .th-grey {
+        background-color: #e9eaec;
+        font-weight: bold;
+    }
+
+    /*   for add table node */
+
+    .btn {
+        display: inline-block;
+        padding: .3em 1.2em;
+        border-radius: 3px;
+        background-color: teal;
+        color: #fff;
+        cursor: pointer;
+    }
+    #sealItemsTable input{
+        width: 100%;
+        border: 1px solid red;
+    }
+
+</style>
+
+
+<script>
+
+
+  function subRegFrom1() {
+
+    var reqData = $("#sealRegForm1");
+
+    var formArray = reqData.serializeArray();
+
+    console.log(formArray);
+    var jsonReq = {};
+    for (i = 0; i < formArray.length; i++) {
+      jsonReq[formArray[i].name] = formArray[i].value;
+    }
+    console.log(JSON.stringify(jsonReq));
+
+  }
+
+  //声明全局变量
+  var flag = 1;
+
+  document.getElementById("btn-seal-add").onclick = function (event) {
+
+    //获取表格有多少行
+    var rowLength = $("#sealItemsTable tr").length;
+    //这里的rowId就是row加上标志位的组合。是每新增一行的tr的id。
+    var rowId = "sealItemRow" + flag;
+
+    //每次往下标为flag+1的下面添加tr,因为append是往标签内追加。所以用 after
+    var insertStr = "<tr id=" + rowId + " " +
+    " onmouseover=\"this.style.backgroundColor='#e9eaec'\"" +
+    " onmouseout=\"this.style.backgroundColor='white'\"  >"
+    + "<td width='10%' ><input type='text' name='sealName'/></td>"
+    + "<td width='8%'  ><input type='text' name='sealColor'/></td>"
+    + "<td width='15%' ><input type='text' name='sealSizeWidth'/></td>"
+    + "<td width='15%' ><input type='text' name='sealSizeHeight'/></td>"
+    + "<td width='10%' ><input type='text' name='validYear'/></td>"
+    + "<td width='10%' ><input type='button' name='delete' value='删除' style='width:80px' onclick='deleteSelectedRow(\"" + rowId + "\")' />";
+    +"</tr>";
+    //这里的行数减2，是因为要减去底部的一行和顶部的一行，剩下的为开始要插入行的索引
+    $("#sealItemsTable tr:eq(" + (rowLength - 2) + ")").after(insertStr); //将新拼接的一行插入到当前行的下面
+    //为新添加的行里面的控件添加新的id属性。
+    $("#" + rowId + " td:eq(0)").children().eq(0).attr("id", "no" + flag);
+    $("#" + rowId + " td:eq(1)").children().eq(0).attr("id", "sealName" + flag);
+    $("#" + rowId + " td:eq(2)").children().eq(0).attr("id", "sealColor" + flag);
+    $("#" + rowId + " td:eq(3)").children().eq(0).attr("id", "sealSizeWidth" + flag);
+    $("#" + rowId + " td:eq(4)").children().eq(0).attr("id", "sealSizeHeight" + flag);
+    $("#" + rowId + " td:eq(5)").children().eq(0).attr("id", "validYear" + flag);
+    //每插入一行，flag自增一次
+    flag++;
+  };
+
+  //-----------------删除一行，根据行ID删除-start--------
+
+  function deleteSelectedRow(rowID) {
+    if (confirm("确定删除该行吗？")) {
+      $("#" + rowID).remove();
+    }
+  }
+
+
+</script>
+
+
+</html>

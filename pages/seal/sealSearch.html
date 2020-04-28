@@ -33,9 +33,9 @@
                 <table>
                     <thead>
                         <tr class="th-grey">
-                            <td width="5%">序号</td>
-                            <td width="20%">印章名称</td>
-                            <td width="10%">印章编号</td>
+                            <td width="3%">序号</td>
+                            <td width="15%">印章名称</td>
+                            <td width="15%">印章编号</td>
                             <td width="15%">使用单位</td>
                             <td width="5%">有效性</td>
                             <td width="15%">有效期</td>
@@ -57,7 +57,7 @@
                             <td  >有效期</td>
                             <td  >操作</td>
                         </tr>
-                        <tr><td colspan="7`">&nbsp;</td></tr>
+                        <!--<tr><td colspan="7`">&nbsp;<button onclick="pcQueryList(0)"> 测试分页 </button></td></tr>-->
                         <tr id="pc"></tr>
                     </tfoot>
                 </table>
@@ -101,6 +101,10 @@
         font-weight: bold;
     }
 
+
+
+    table td{border:1px solid #F00}
+
 </style>
 
 
@@ -118,12 +122,15 @@
     let pageSize = fullData.pageSize;
     let total = fullData.total;
 
-    var pcDiv = "<td colspan='2'>" +
-    " 共<span>"+ total +"</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
+    var pcDiv = "" +
+    "<td colspan='5' style='text-align: left;'>&nbsp;最后一次查询时间:<span>"+ (new Date()) +"</span>&nbsp;</td>" +
+    "<td colspan='2'>" +
+    " 每页<span>"+ pageSize +"</span>条 " +
+    " / 共<span>"+ total +"</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
     " 第<span>"+pageNo+"</span>页 " +
     " / 共<span>"+ Math.ceil(total/pageSize) +"</span>页 " +
-    "</td>" +
-    "<td colspan='5'>&nbsp;</td>"
+    "</td>";
+
 
 
     var dataStr = "";
@@ -134,9 +141,9 @@
     if(listSize > 0){
       let i = 0;
       for(; i<listSize; i++){
-        dataStr += "<tr>" +
+        dataStr += "<tr onmouseover=\"this.style.backgroundColor='#e9eaec'\" onmouseout=\"this.style.backgroundColor='white'\" >" +
         "<td>"+(i+1)+"</td>" +
-        "<td>"+list[i].sealName+"</td>" +
+        "<td >"+list[i].sealName+"</td>" +
         "<td>"+list[i].sealCode+"</td>" +
         "<td>"+list[i].useUnit+"</td>" +
         "<td>"+list[i].valid+"</td>" +
@@ -196,6 +203,7 @@
           var sealData = res.data;
           // console.log(sealData);
           loadSealList(sealData);
+          searchConditon = req;
 
         } else {
           alert("查询印章失败：" + res.msg);
@@ -205,6 +213,17 @@
 
   }
 
+
+  /**
+   * 分页查询
+   */
+  function pcQueryList(flag){
+    console.log(searchConditon);
+
+
+
+
+  }
 
 </script>
 
