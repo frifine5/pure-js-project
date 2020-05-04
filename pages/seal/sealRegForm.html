@@ -34,7 +34,8 @@
                     <td>
                         <div class="reg-form-table-input">
                             <div class="input-label">统一社会信用代码</div>
-                            <input id="useUnitUCode" type="text" autocomplete="off" placeholder=""/>
+                            <input id="useUnitUCode" type="text" autocomplete="on" placeholder=""
+                                        onKeyUp = "value = value.replace(/[^a-z0-9]|^[^a-z]/ig,'')" />
                         </div>
                     </td>
                 </tr>
@@ -43,7 +44,7 @@
                         <div class="reg-form-table-input">
                             <div class="input-label">公司类型</div>
                             <select style="height: inherit;  padding-top: 5px; border: none;" name="usnUnitType">
-                                <option value="00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请选择&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                <option value="00">请选择</option>
                                 <option value="01">有限责任公司</option>
                                 <option value="02">股份有限公司(非上市)</option>
                                 <option value="03">上市公司</option>
@@ -54,7 +55,7 @@
                     <td>
                         <div class="reg-form-table-input">
                             <div class="input-label">法定代表人</div>
-                            <input type="text" name="useUnitLegalPerson" autocomplete="off" placeholder=""/>
+                            <input type="text" name="useUnitLegalPerson" autocomplete="off" placeholder="" />
                         </div>
                     </td>
                 </tr>
@@ -62,7 +63,8 @@
                     <td>
                         <div class="reg-form-table-input">
                             <div class="input-label">联系电话</div>
-                            <input type="text" name="useUnitPhone" autocomplete="off" placeholder=""/>
+                            <input type="text" name="useUnitPhone" autocomplete="on" placeholder="请输入电话或手机号"
+                                   onkeyup="value=value.replace(/[^\d-]/g,'')"/><!-- 按固化和手机号输入，这里是数字和短横 -->
                         </div>
                     </td>
                     <td>
@@ -75,9 +77,9 @@
 
                 <tr>
                     <td colspan="2">
-                        <div class="reg-form-table-input" style="width: 83.5%;">
+                        <div class="reg-form-table-input" style="width: 82%;">
                             <div class="input-label">单位地址</div>
-                            <input type="text" name="useUnitAddress" autocomplete="off" placeholder=""/>
+                            <input type="text" style="width: 80%;" name="useUnitAddress" autocomplete="off" placeholder=""/>
                         </div>
                     </td>
                 </tr>
@@ -98,7 +100,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <div class="reg-form-table-input" style="width: 91.5%; height: 200px;">
+                        <div class="reg-form-table-input" style="width: 82%; height: 200px;">
                             <table id="sealItemsTable"
                                    style="border: 1px; width: 100%; height: 210px; text-align: center; vertical-align: middle; font-size: small;">
                                 <thead>
@@ -107,14 +109,13 @@
                                     <td width="8%">印章颜色</td>
                                     <td width="10%">印章尺寸(宽mm)</td>
                                     <td width="10%">印章尺寸(高mm)</td>
-                                    <td width="20%">有效期</td>
+                                    <td width="20%">有效期(年)</td>
                                     <td width="10%">操作</td>
                                 </tr>
 
                                 </thead>
                                 <tbody id="sealItemsBody">
-
-
+                                    <!-- seal item arr -->
                                 </tbody>
 
 
@@ -161,16 +162,8 @@
         padding-left: 20px;
     }
 
-    .module-list {
-        padding: 10px 10px;
-        margin-top: 20px;
-        margin-left: 15px;
-        display: inline-block;
-        vertical-align: middle;
-        align-content: center;
-        text-align: center;
-        float: left;
-        /*width: 90%;*/
+    .module-name a{
+        font-weight: bolder;
 
     }
 
@@ -194,12 +187,16 @@
 
     }
 
+    .reg-form-table-input select{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
     .reg-form-table-input input {
         border: none;
         position: relative;
         border-bottom-left-radius: 0 !important;
         border-top-left-radius: 0 !important;
-        padding: 1px 0 -1px 5px;
+        padding-left: 5px;
         line-height: 1;
         vertical-align: middle;
         height: 28px;
@@ -228,6 +225,9 @@
     #sealItemsTable input{
         width: 100%;
         border: 1px solid red;
+        text-align: center;
+        padding-left: 0;
+        background-color:transparent;
     }
 
 </style>
@@ -242,12 +242,80 @@
 
     var formArray = reqData.serializeArray();
 
-    console.log(formArray);
+    // console.log(formArray);
     var jsonReq = {};
-    for (i = 0; i < formArray.length; i++) {
+    for (var i = 0; i < formArray.length; i++) {
       jsonReq[formArray[i].name] = formArray[i].value;
     }
+
+    // 获得印章子集
+    var siBodyArr = $("#sealItemsTable tr");
+    // console.log(siBodyArr);
+
+    var seals = new Array();
+    for( var i=1; i< siBodyArr.length; i++){
+      // console.log(siBodyArr[i]);
+      // console.log(siBodyArr[i].id);
+
+      var eaTrInputs = $('#'+siBodyArr[i].id + ' input');
+      // console.log(eaTrInputs.length);
+
+      var sealItem = {};
+      var a = eaTrInputs;
+
+      for(var j=0; j< eaTrInputs.length; j++){
+        if("sealName" === a[j].name){
+          sealItem['sealName'] = a[j].value;
+        }
+        if("sealColor" === a[j].name){
+          sealItem['sealColor'] = a[j].value;
+        }
+        if("sealSizeWidth" === a[j].name){
+          sealItem['sealSizeWidth'] = a[j].value;
+        }
+        if("sealSizeHeight" === a[j].name){
+          sealItem['sealSizeHeight'] = a[j].value;
+        }
+        if("validYear" === a[j].name){
+          sealItem['validYear'] = a[j].value;
+        }
+
+      }
+      seals.push(sealItem);
+    }
+
+    // console.log(seals);
+
+    if(siBodyArr.length > 1){
+      jsonReq['seals'] = seals;
+    }else{
+      jsonReq['seals'] = null;
+    }
+
+
     console.log(JSON.stringify(jsonReq));
+
+    reqData = JSON.stringify(jsonReq);
+
+    $.ajax({
+      url: "/Api/mock/view/v1/sealList.json",
+      type: 'post',
+      contentType: "application/json",
+      data: reqData,
+      dataType: 'json',
+      success: function (res) {
+        // console.log(res);
+        if (0 === res.code) {
+          // var sealData = res.data;
+          // console.log(sealData);
+          // loadSealList(sealData);
+          // searchConditon = req;
+
+        } else {
+          alert("查询印章失败：" + res.msg);
+        }
+      }
+    });
 
   }
 
@@ -265,15 +333,16 @@
     var insertStr = "<tr id=" + rowId + " " +
     " onmouseover=\"this.style.backgroundColor='#e9eaec'\"" +
     " onmouseout=\"this.style.backgroundColor='white'\"  >"
-    + "<td width='10%' ><input type='text' name='sealName'/></td>"
+    + "<td width='15%' ><input type='text' name='sealName'/></td>"
     + "<td width='8%'  ><input type='text' name='sealColor'/></td>"
-    + "<td width='15%' ><input type='text' name='sealSizeWidth'/></td>"
-    + "<td width='15%' ><input type='text' name='sealSizeHeight'/></td>"
-    + "<td width='10%' ><input type='text' name='validYear'/></td>"
-    + "<td width='10%' ><input type='button' name='delete' value='删除' style='width:80px' onclick='deleteSelectedRow(\"" + rowId + "\")' />";
+    + "<td width='12%' ><input type='text' name='sealSizeWidth' onkeyup='value=value.replace(/[^0-9]/g, \"\")' /></td>"
+    + "<td width='12%' ><input type='text' name='sealSizeHeight'onkeyup='value=value.replace(/[^0-9]/g, \"\")' /></td>"
+    + "<td width='8%' ><input type='text' name='validYear' onkeyup='value=value.replace(/[^0-9]/g, \"\")' /></td>"
+    + "<td width='8%' ><button class='btn-pri' style='width:80px' " +
+    " onclick='deleteSelectedRow(\"" + rowId + "\")' >删除</button>";
     +"</tr>";
     //这里的行数减2，是因为要减去底部的一行和顶部的一行，剩下的为开始要插入行的索引
-    $("#sealItemsTable tr:eq(" + (rowLength - 2) + ")").after(insertStr); //将新拼接的一行插入到当前行的下面
+    $("#sealItemsTable tr:eq(" + (rowLength - 1) + ")").after(insertStr); //将新拼接的一行插入到当前行的下面
     //为新添加的行里面的控件添加新的id属性。
     $("#" + rowId + " td:eq(0)").children().eq(0).attr("id", "no" + flag);
     $("#" + rowId + " td:eq(1)").children().eq(0).attr("id", "sealName" + flag);
@@ -288,9 +357,13 @@
   //-----------------删除一行，根据行ID删除-start--------
 
   function deleteSelectedRow(rowID) {
-    if (confirm("确定删除该行吗？")) {
-      $("#" + rowID).remove();
-    }
+
+    // if (confirm("确定删除该行吗？")) {
+    //   $("#" + rowID).remove();
+    // }
+
+    $("#" + rowID).remove();
+
   }
 
 
