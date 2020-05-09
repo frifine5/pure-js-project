@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>审批结果表</title>
+    <link rel="stylesheet" href="../../assert/css/global.css">
+    <script src="../../assert/js/jquery-3.5.0.js"></script>
+    <script src="../../assert/js/jquery.cookie.js"></script>
+    <script src="../../assert/js/global.js"></script>
+
+</head>
+<body>
+<div class="app">
+    <div class="module-name">
+        <span><a class="">审批结果表</a></span>
+    </div>
+    <div class="module-search">
+
+        <div class="input-grp">
+            <div class="input-label">印章名称</div>
+            <input id="sealName" type="text" autocomplete="off" placeholder=""/>
+        </div>
+        <div class="input-grp">
+            <div class="input-label">记录日期</div>
+            <input id="rdTime" type="text" autocomplete="off" placeholder="日期格式:yyyy-MM-dd"
+                   onkeyup="value=value.replace(/[^\d-]/g,'')"/>
+        </div>
+        <div class="input-grp">
+            <div class="input-label">审批结果</div>
+            <select id="apprRet" style="height: inherit; border: none;" name="ret">
+                <option value="-1">请选择</option>
+                <option value="1">通过</option>
+                <option value="0">驳回</option>
+            </select>
+        </div>
+        <div class="input-grp pull-left no-border">
+            <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" onclick="resetCondition()"> 重置</button>
+            <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" onclick="pcQueryList()"> 查询</button>
+            <!--doPostDownFile-->
+            <button class="btn-pri" style="font-size: 1em;" onclick="doPostDownFile()"> 导出</button>
+        </div>
+
+    </div>
+
+    <div class="module-list">
+        <div>
+            <table>
+                <thead>
+                <tr class="th-grey">
+                    <td width="3%">序号</td>
+                    <td width="15%">申请编号</td>
+                    <td width="15%">印章名称</td>
+                    <td width="8%">记录时间</td>
+                    <td width="5%">业务类型</td>
+                    <td width="8%">审批结果</td>
+                    <td width="15%">审批意见</td>
+                    <td width="8%">审批时间</td>
+                    <td width="10%">操作</td>
+                </tr>
+
+                </thead>
+                <tbody id="sealBody">
+
+                </tbody>
+
+                <tfoot id="seal-tfoot">
+                <tr class="th-grey">
+                    <td width="3%">序号</td>
+                    <td width="15%">申请编号</td>
+                    <td width="15%">印章名称</td>
+                    <td width="8%">记录时间</td>
+                    <td width="5%">业务类型</td>
+                    <td width="8%">审批结果</td>
+                    <td width="15%">审批意见</td>
+                    <td width="8%">审批时间</td>
+                    <td width="10%">操作</td>
+                </tr>
+                <!--<tr><td colspan="7`">&nbsp;<button onclick="pcQueryList(0)"> 测试分页 </button></td></tr>-->
+                <tr id="pc"></tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+
+<style>
+
+    .app {
+        float: left;
+        box-sizing: border-box;
+        position: absolute;
+        width: 80%;
+        padding-left: 20px;
+    }
+
+    .module-list {
+        padding: 10px 10px;
+        margin-top: 20px;
+        margin-left: 15px;
+        display: inline-block;
+        vertical-align: middle;
+        align-content: center;
+        text-align: center;
+        float: left;
+        width: 90%;
+
+    }
+
+    .th-grey {
+        background-color: #e9eaec;
+        font-weight: bold;
+    }
+
+    table td {
+        border: 1px solid #F00
+    }
+
+
+    .fh{
+        display: inline-block;
+        max-width:160px;
+        word-wrap:break-word;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        overflow:hidden;
+    }
+    .fh:hover{
+        white-space:normal;
+        overflow:auto;
+    }
+
+</style>
+
+
+<script>
+
+  var sealList;
+  var searchConditon;
+
+  function loadList(data) {
+
+    var fullData = data;
+    var list = fullData.list;
+    let pageNo = fullData.pageNo;
+    let pageSize = fullData.pageSize;
+    let total = fullData.total;
+
+    var pcDiv = "" +
+    "<td colspan='5' style='text-align: left;'>&nbsp;最后一次查询时间:<span>" + (new Date()) + "</span>&nbsp;</td>" +
+    "<td colspan='2' style='border-right: none;'>" +
+    " 每页<span>" + pageSize + "</span>条 " +
+    " / 共<span>" + total + "</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
+    " 第<span>" + pageNo + "</span>页 " +
+    " / 共<span>" + Math.ceil(total / pageSize) + "</span>页 " +
+    "</td>";
+    pcDiv += "<td colspan='2' style='border-left: none;'>";
+    pcDiv += " <span><button onclick='pcQueryList(1)'>首页</button></span> ";
+    if(pageNo > 1){
+      pcDiv += " <span><button onclick='pcQueryList(\""+(pageNo - 1)+"\")'>上一页</button></span> ";
+    }
+    if(total/pageSize > pageNo){
+      pcDiv += " <span><button onclick='pcQueryList(\""+(pageNo + 1)+"\")'>下一页</button></span> ";
+    }
+    var pages = Math.ceil(total/pageSize);
+    pcDiv += " <span><button onclick='pcQueryList(\""+ pages +"\")'>末页</button></span> ";
+    pcDiv += "</td>";
+
+
+    var dataStr = "";
+    let listSize = list.length;
+    var sealTableBody = $("#sealBody");
+    var sealPc = $("#pc");
+
+    if (listSize > 0) {
+      let i = 0;
+      for (; i < listSize; i++) {
+        let time = new Date(list[i].time);
+        let fin = new Date(list[i].finTime);
+        // console.log(time);
+        dataStr += "<tr onmouseover=\"this.style.backgroundColor='#e9eaec'\" onmouseout=\"this.style.backgroundColor='white'\" >" +
+        "<td>" + (i+1) +"</td>" +
+        "<td>" + list[i].apyNo + "</td>" +
+        "<td>" + list[i].sealName + "</td>" +
+        "<td>" + time.format('yyyy-MM-dd') + "</td>" +
+        "<td>" + list[i].bizTypeName + "</td>" +
+        "<td>" + list[i].retStatus + "</td>" +
+        "<td><a class='fh' href='' style='text-decoration: none;'>" + list[i].info + "</a></td>" +
+        "<td>" + fin.format('yyyy-MM-dd') + "</td>" +
+        "<td>" + "<button onclick='queryDetail(\""+list[i].sealName+"\", 1)'>查看详情</button>" + "</td>" +
+        "</tr>"
+      }
+      sealTableBody.empty();
+      sealTableBody.prepend(dataStr);
+
+      sealPc.empty();
+      sealPc.prepend(pcDiv);
+    } else {
+      sealTableBody.empty();
+      sealTableBody.prepend("未查询到数据");
+    }
+
+
+  }
+
+
+  /**重置查询条件
+   * */
+  function resetCondition() {
+    $("#sealName").val('');
+    $("#rdTime").val('');
+
+    $("#apprRet").val('-1');
+
+    searchConditon = '';
+    pcQueryList(1);
+  }
+
+
+  /** 查询印章
+   * */
+  function queryDetail(sealName, bizType) {
+    var param = '';
+    if( undefined === sealName ||  sealName == 'null'){
+      //
+    }else{
+      param += '&sealName=' + sealName;
+    }
+    if(! undefined == bizType){
+      param += '&bizType=' + bizType;
+    }
+
+
+    $.ajax({
+      url: SERVER_URL + "/flow/appr/oneDetail?" + param,
+      type: 'GET',
+      contentType: "application/json",
+      // data: reqData,
+      dataType: 'json',
+      success: function (res) {
+        // console.log(res);
+        if (0 === res.code) {
+          var sealData = res.data;
+          console.log(sealData);
+          //
+
+
+        } else {
+          alert("查询详情失败：" + res.msg);
+        }
+      }
+    });
+
+  }
+
+
+  /**
+   * 分页查询
+   */
+  function pcQueryList(pageNo) {
+
+    var param = '';
+
+    if(-1 == pageNo){
+      param = searchConditon;
+    }else{
+      var sealName = $("#sealName").val();
+      var rdTime = $("#rdTime").val();
+      var ret = $('#apprRet option:selected').val();
+      if( ! (undefined === sealName)){
+        param += '&sealName=' + sealName ;
+      }
+      if( !(undefined === rdTime) && isdate(rdTime)){
+        param += '&rdTime=' + rdTime;
+      }
+      if( !(undefined === pageNo)){
+        param += '&pageNo=' + pageNo;
+      }
+      if( undefined === ret || '-1' == ret){
+
+      }else{
+        param += '&ret=' + ret;
+      }
+
+    }
+
+
+    $.ajax({
+      url: SERVER_URL + "/flow/appr/queryResultList?"+ param,
+      type: 'GET',
+      contentType: "application/json",
+      // data: reqData,
+      dataType: 'json',
+      success: function (res) {
+        // console.log(res);
+        if (0 === res.code) {
+          var data = res.data;
+          // console.log(data);
+          loadList(data);
+          searchConditon = param;
+
+        } else {
+          alert("查询印章失败：" + res.msg);
+        }
+      }
+    });
+
+
+
+
+  }
+
+  function doPostDownFile() {
+
+    var param = '';
+    var sealName = $("#sealName").val();
+    var rdTime = $("#rdTime").val();
+    if( ! (undefined === sealName)){
+      param += '&sealName=' + sealName ;
+    }
+    if( !(undefined === rdTime) && isdate(rdTime)){
+      param += '&rdTime=' + rdTime;
+    }
+
+    var url = SERVER_URL + "/flow/appr/resultList2Excel?" + param;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);//get请求，请求地址，是否异步
+    xhr.responseType = "blob";    // 返回类型blob
+    xhr.onload = function () {// 请求完成处理函数
+      if (this.status === 200) {
+        var blob = this.response;// 获取返回值
+        if ('application/json' === blob.type) {
+
+          var reader = new FileReader();
+          reader.onload = function (event) {
+            var content = reader.result;//内容就在这里
+            var result = JSON.parse(content);
+            alert(result['msg']);
+          };
+          reader.readAsText(blob);
+
+        } else if ('application/vnd.ms-excel' === blob.type) {
+          var a = document.createElement('a');
+          a.download = '审批结果表.xlsx';
+          a.href = window.URL.createObjectURL(blob);
+          a.click();
+
+        } else {
+          alert("非预期返回类型：" + blob.type);
+        }
+      } else {
+        // console.log(this);
+
+      }
+    };
+    // 发送ajax请求
+    xhr.send();
+
+
+  }
+
+
+  window.onload = function () {
+    pcQueryList(1);
+  }
+
+</script>
+
+
+</html>

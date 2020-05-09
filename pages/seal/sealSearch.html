@@ -6,73 +6,74 @@
     <link rel="stylesheet" href="../../assert/css/global.css">
     <script src="../../assert/js/jquery-3.5.0.js"></script>
     <script src="../../assert/js/jquery.cookie.js"></script>
-
 </head>
 <body>
-    <div class="app">
-        <div class="module-name">
-            <span><a class="">印章查询</a></span>
+<div class="app">
+    <div class="module-name">
+        <span><a class="">印章查询</a></span>
+    </div>
+    <div class="module-search">
+        <div class="input-grp">
+            <div class="input-label">印章名称</div>
+            <input id="sealName" type="text" autocomplete="off" placeholder=""/>
         </div>
-        <div class="module-search">
-            <div class="input-grp">
-                <div class="input-label">印章名称</div>
-                <input id="sealName" type="text" autocomplete="off" placeholder="" />
-            </div>
-            <div class="input-grp">
-                <div class="input-label">申请单位</div>
-                <input id="useUnit" type="text" autocomplete="off" placeholder="" />
-            </div>
-            <div class="input-grp pull-left no-border">
-                <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" onclick="resetCondition()"> 重置 </button>
-                <button class="btn-pri" style="font-size: 1em;" onclick="queryList()"> 查询 </button>
-            </div>
+        <div class="input-grp">
+            <div class="input-label">申请单位</div>
+            <input id="useUnit" type="text" autocomplete="off" placeholder=""/>
         </div>
-
-        <div class="module-list">
-            <div>
-                <table>
-                    <thead>
-                        <tr class="th-grey">
-                            <td width="3%">序号</td>
-                            <td width="15%">印章名称</td>
-                            <td width="15%">印章编号</td>
-                            <td width="15%">使用单位</td>
-                            <td width="5%">有效性</td>
-                            <td width="15%">有效期</td>
-                            <td width="10%">操作</td>
-                        </tr>
-
-                    </thead>
-                    <tbody id="sealBody">
-
-                    </tbody>
-
-                    <tfoot id="seal-tfoot" >
-                        <tr class="th-grey">
-                            <td  >序号</td>
-                            <td  >印章名称</td>
-                            <td  >印章编号</td>
-                            <td  >使用单位</td>
-                            <td  >有效性</td>
-                            <td  >有效期</td>
-                            <td  >操作</td>
-                        </tr>
-                        <!--<tr><td colspan="7`">&nbsp;<button onclick="pcQueryList(0)"> 测试分页 </button></td></tr>-->
-                        <tr id="pc"></tr>
-                    </tfoot>
-                </table>
-            </div>
-
+        <div class="input-grp pull-left no-border">
+            <button class="btn-pri" style="font-size: 1em; margin-right: 20px;" onclick="resetCondition()"> 重置</button>
+            <button class="btn-pri" style="font-size: 1em;" onclick="queryList()"> 查询</button>
+            <!--doPostDownFile-->
+            <button class="btn-pri" style="font-size: 1em;" onclick="doPostDownFile()"> 导出</button>
         </div>
+    </div>
 
+    <div class="module-list">
+        <div>
+            <table>
+                <thead>
+                <tr class="th-grey">
+                    <td width="3%">序号</td>
+                    <td width="15%">印章名称</td>
+                    <td width="15%">印章编号</td>
+                    <td width="15%">使用单位</td>
+                    <td width="5%">有效性</td>
+                    <td width="15%">有效期</td>
+                    <td width="10%">操作</td>
+                </tr>
+
+                </thead>
+                <tbody id="sealBody">
+
+                </tbody>
+
+                <tfoot id="seal-tfoot">
+                <tr class="th-grey">
+                    <td>序号</td>
+                    <td>印章名称</td>
+                    <td>印章编号</td>
+                    <td>使用单位</td>
+                    <td>有效性</td>
+                    <td>有效期</td>
+                    <td>操作</td>
+                </tr>
+                <!--<tr><td colspan="7`">&nbsp;<button onclick="pcQueryList(0)"> 测试分页 </button></td></tr>-->
+                <tr id="pc"></tr>
+                </tfoot>
+            </table>
+        </div>
 
     </div>
+
+
+</div>
 
 </body>
 
 <style>
 
-    .app{
+    .app {
         float: left;
         box-sizing: border-box;
         position: absolute;
@@ -80,8 +81,7 @@
         padding-left: 20px;
     }
 
-
-    .module-list{
+    .module-list {
         padding: 10px 10px;
         margin-top: 20px;
         margin-left: 15px;
@@ -94,19 +94,16 @@
 
     }
 
-
-
-    .th-grey{
+    .th-grey {
         background-color: #e9eaec;
         font-weight: bold;
     }
 
-
-
-    table td{border:1px solid #F00}
+    table td {
+        border: 1px solid #F00
+    }
 
 </style>
-
 
 
 <script>
@@ -114,7 +111,7 @@
   var sealList;
   var searchConditon;
 
-  function loadSealList(data){
+  function loadSealList(data) {
 
     var fullData = data;
     var list = fullData.list;
@@ -123,14 +120,13 @@
     let total = fullData.total;
 
     var pcDiv = "" +
-    "<td colspan='5' style='text-align: left;'>&nbsp;最后一次查询时间:<span>"+ (new Date()) +"</span>&nbsp;</td>" +
+    "<td colspan='5' style='text-align: left;'>&nbsp;最后一次查询时间:<span>" + (new Date()) + "</span>&nbsp;</td>" +
     "<td colspan='2'>" +
-    " 每页<span>"+ pageSize +"</span>条 " +
-    " / 共<span>"+ total +"</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
-    " 第<span>"+pageNo+"</span>页 " +
-    " / 共<span>"+ Math.ceil(total/pageSize) +"</span>页 " +
+    " 每页<span>" + pageSize + "</span>条 " +
+    " / 共<span>" + total + "</span>条&nbsp;&nbsp;&nbsp;&nbsp; " +
+    " 第<span>" + pageNo + "</span>页 " +
+    " / 共<span>" + Math.ceil(total / pageSize) + "</span>页 " +
     "</td>";
-
 
 
     var dataStr = "";
@@ -138,17 +134,17 @@
     var sealTableBody = $("#sealBody");
     var sealPc = $("#pc");
 
-    if(listSize > 0){
+    if (listSize > 0) {
       let i = 0;
-      for(; i<listSize; i++){
+      for (; i < listSize; i++) {
         dataStr += "<tr onmouseover=\"this.style.backgroundColor='#e9eaec'\" onmouseout=\"this.style.backgroundColor='white'\" >" +
-        "<td>"+(i+1)+"</td>" +
-        "<td >"+list[i].sealName+"</td>" +
-        "<td>"+list[i].sealCode+"</td>" +
-        "<td>"+list[i].useUnit+"</td>" +
-        "<td>"+list[i].valid+"</td>" +
-        "<td>"+list[i].validSt +" - "+list[i].validEnd+"</td>" +
-        "<td>"+ "<button>查看</button>" + "<button>其它</button>" +"</td>" +
+        "<td>" + (i + 1) + "</td>" +
+        "<td >" + list[i].sealName + "</td>" +
+        "<td>" + list[i].sealCode + "</td>" +
+        "<td>" + list[i].useUnit + "</td>" +
+        "<td>" + list[i].valid + "</td>" +
+        "<td>" + list[i].validSt + " - " + list[i].validEnd + "</td>" +
+        "<td>" + "<button>查看</button>" + "<button>其它</button>" + "</td>" +
 
         "</tr>"
       }
@@ -157,37 +153,34 @@
 
       sealPc.empty();
       sealPc.prepend(pcDiv);
-    }else{
+    } else {
       sealTableBody.empty();
       sealTableBody.prepend("未查询到数据");
     }
 
 
-
-
   }
-
 
 
   /**重置查询条件
    * */
-  function resetCondition(){
-    $("#sealName").empty();
-    $("#useUnit").empty();
+  function resetCondition() {
+    $("#sealName").val('');
+    $("#useUnit").val('');
     queryList();
   }
 
 
   /** 查询印章
    * */
-  function queryList(){
+  function queryList() {
     var userToken = $.cookie('userToken');
     var sealName = $("#sealName").val();
     var useUnit = $("#useUnit").val();
     var req = {
       "token": userToken,
-      "sealName": undefined=== sealName? "": sealName,
-      "useUnit": undefined===useUnit?"":useUnit
+      "sealName": undefined === sealName ? "" : sealName,
+      "useUnit": undefined === useUnit ? "" : useUnit
     };
     let reqData = JSON.stringify(req);
     console.log(reqData);
@@ -217,13 +210,51 @@
   /**
    * 分页查询
    */
-  function pcQueryList(flag){
+  function pcQueryList(flag) {
     console.log(searchConditon);
 
 
+  }
+
+  function doPostDownFile() {
+
+    var url = "/50plat/flow/queryList2Excel?step=9";
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);//get请求，请求地址，是否异步
+    xhr.responseType = "blob";    // 返回类型blob
+    xhr.onload = function () {// 请求完成处理函数
+      if (this.status === 200) {
+        var blob = this.response;// 获取返回值
+        if('application/json' === blob.type){
+
+          var reader = new FileReader();
+          reader.onload = function(event){
+            var content = reader.result;//内容就在这里
+            console.log(content);
+          };
+          reader.readAsText(blob);
+
+        }else if('application/vnd.ms-excel' === blob.type){
+          var a = document.createElement('a');
+          a.download = '列表.xlsx';
+          a.href = window.URL.createObjectURL(blob);
+          a.click();
+
+        }else{
+          alert("非预期返回类型：" + blob.type);
+        }
+      }else{
+        console.log(this);
+
+      }
+    };
+    // 发送ajax请求
+    xhr.send();
 
 
   }
+
+
 
 </script>
 

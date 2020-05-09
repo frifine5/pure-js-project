@@ -241,8 +241,8 @@
     var reqData = $("#sealRegForm1");
 
     var formArray = reqData.serializeArray();
-
-    // console.log(formArray);
+    console.log(reqData.serialize());
+    console.log(formArray);
     var jsonReq = {};
     for (var i = 0; i < formArray.length; i++) {
       jsonReq[formArray[i].name] = formArray[i].value;
