@@ -84,6 +84,198 @@
     </div>
 
 
+
+    <div>
+        <!--<input type="button" name="popBox" value="弹出框" onclick="popBox()">-->
+        <div id="popLayer"></div>
+        <div id="popBox">
+            <div class="close">
+                <a href="javascript:void(0)" onclick="closeBox()">关闭</a>
+            </div>
+            <div class="content">
+                <table>
+                    <tr>
+                        <td colspan="8" width="100%"><h3> 印章详细信息表 </h3></td>
+                    </tr>
+                    <!-- 单位信息 -->
+                    <tr>
+                        <td rowspan="5"  width="6%"><strong>单位信息</strong></td>
+                        <td width="12%">申请单号</td>
+                        <td width="12%"><span id="apyId"></span></td>
+                        <td width="14%">申请子单号</td>
+                        <td width="12%"><span id="apySubId"></span></td>
+                        <td width="12%"></td>
+                        <td width="12%"></td>
+                    </tr>
+                    <tr>
+                        <td>单位名称</td>
+                        <td><span id="useUnitName"></span></td>
+                        <td>统一社会信用代码</td>
+                        <td><span id="usScid"></span></td>
+                        <td>单位类型</td>
+                        <td><span id="useUnitType"></span></td>
+                    </tr>
+
+                    <tr>
+                        <td>单位电话</td>
+                        <td><span id="useUnitPhone"></span></td>
+                        <td>单位传真</td>
+                        <td><span id="useUnitFax"></span></td>
+                        <td>单位邮编</td>
+                        <td><span id="useUnitZipCode"></span></td>
+                    </tr>
+                    <tr>
+                        <td>法定代表人</td>
+                        <td><span id="useUnitLegalPersonName"></span></td>
+                        <td>法代电话</td>
+                        <td><span id="useUnitLegalPersonPhone"></span></td>
+                        <td>法代证件号</td>
+                        <td><span id="useUnitLegalPersonID"></span></td>
+                    </tr>
+                    <tr>
+                        <td>地区</td>
+                        <td><span id="useUnitArea"></span></td>
+                        <td>详细地址</td>
+                        <td colspan="3"><span id="useUnitAddress"></span></td>
+                    </tr>
+
+
+                    <!-- 审批单位 -->
+                    <tr>
+                        <td rowspan="2"  width="6%"><strong>审批单位</strong></td>
+                        <td width="12%">单位名称</td>
+                        <td width="12%"><span id="apprUnitName"></span></td>
+                        <td width="14%"></td>
+                        <td width="12%"></td>
+                        <td width="12%"></td>
+                        <td width="12%"></td>
+                    </tr>
+                    <tr>
+                        <td>经办人</td>
+                        <td><span id="operatorName"></span></td>
+                        <td>经办人电话</td>
+                        <td><span id="operatorPhone"></span></td>
+                        <td>经办人ID</td>
+                        <td><span id="operatorID"></span></td>
+                    </tr>
+
+                    <!-- 印章信息 -->
+                    <tr>
+                        <td rowspan="5"  width="6%"><strong>印章信息</strong></td>
+                        <td width="12%">印章名称</td>
+                        <td width="12%"><span id="detailSealName"></span></td>
+                        <td width="14%">印章编码</td>
+                        <td width="12%"><span id="detailSealCode"></span></td>
+                        <td width="12%">有效期</td>
+                        <td width="12%"><span id="detailValid"></span></td>
+                    </tr>
+                    <tr>
+                        <td>印章类型</td>
+                        <td><span id="sealType"></span></td>
+                        <td rowspan="4">印章图片预览</td>
+                        <td colspan="4" rowspan="4"><div id="sealImage"></div></td>
+                    </tr>
+
+                    <tr>
+                        <td>印章颜色</td>
+                        <td><span id="sealColor"></span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">印章尺寸</td>
+                        <td>宽: <span id="sealSizeWidth"></span>mm</td>
+                    </tr>
+                    <tr>
+                        <td>高: <span id="sealSizeHeight"></span>mm</td>
+                    </tr>
+
+                    <!-- 审批信息 -->
+                    <tr>
+                        <td rowspan="2"  ><strong>审批信息</strong></td>
+                        <td  >是否审批</td>
+                        <td  ><span id="detailIsAppr"></span></td>
+                        <td  >审批结果</td>
+                        <td  colspan="3"><span id="detailApprInfo"></span></td>
+                    </tr>
+                    <tr>
+                        <td  >业务类型</td>
+                        <td  ><span id="detailBizType"></span></td>
+                        <td  ></td>
+                        <td  ></td>
+                        <td  ></td>
+                        <td  ></td>
+                    </tr>
+
+
+                    <!-- END -->
+                    <tr>
+                        <td colspan="7" width="100%">&nbsp;</td>
+                    </tr>
+
+
+
+
+                </table>
+                <div style="height: 30px;"></div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹出层 Start -->
+    <style>
+        /*弹出层*/
+        #popBox {
+            display: none;
+            background-color: #FFFFFF;
+            z-index: 11;
+            width: 1000px;
+            /*height: 600px;*/
+            position:fixed;
+            top:0;
+            right:0;
+            left:0;
+            bottom:0;
+            margin-top: 5px;
+            padding: 20px;
+            opacity: 95%;
+        }
+        /*关闭按钮*/
+        #popBox .close{
+            font-weight: bolder;
+            font-size: 1.2em;
+            text-align: right;
+            margin-right: 10px;
+            background-color: #F8F8F8;
+        }
+        #popBox .close a {
+            text-decoration: none;
+            color: #2D2C3B;
+        }
+    </style>
+    <script>
+      /** 自定义弹出层 */
+      /*点击弹出按钮*/
+      function popBox() {
+        var popBox = document.getElementById("popBox");
+        var popLayer = document.getElementById("popLayer");
+        popBox.style.display = "block";
+        popLayer.style.display = "block";
+      };
+
+      /*点击关闭按钮*/
+      function closeBox() {
+        var popBox = document.getElementById("popBox");
+        var popLayer = document.getElementById("popLayer");
+        popBox.style.display = "none";
+        popLayer.style.display = "none";
+      }
+    </script>
+    <!-- 弹出层 End -->
+
+
 </div>
 
 </body>
@@ -189,9 +381,9 @@
         "<td>" + time.format('yyyy-MM-dd') + "</td>" +
         "<td>" + list[i].bizTypeName + "</td>" +
         "<td>" + list[i].retStatus + "</td>" +
-        "<td><a class='fh' href='' style='text-decoration: none;'>" + list[i].info + "</a></td>" +
+        "<td><a class='fh' href='javascript:void(0);' style='text-decoration: none;'>" + list[i].info + "</a></td>" +
         "<td>" + fin.format('yyyy-MM-dd') + "</td>" +
-        "<td>" + "<button onclick='queryDetail(\""+list[i].sealName+"\", 1)'>查看详情</button>" + "</td>" +
+        "<td>" + "<button onclick='queryDetail(\""+list[i].sealName+"\", 1,"+list[i].type+")'>查看详情</button>" + "</td>" +
         "</tr>"
       }
       sealTableBody.empty();
@@ -223,14 +415,17 @@
 
   /** 查询印章
    * */
-  function queryDetail(sealName, bizType) {
+  function queryDetail(sealName, appr, bizType) {
     var param = '';
     if( undefined === sealName ||  sealName == 'null'){
       //
     }else{
       param += '&sealName=' + sealName;
     }
-    if(! undefined == bizType){
+    if(! (undefined === appr)){
+      param += '&appr=' + appr;
+    }
+    if(! (undefined === bizType)){
       param += '&bizType=' + bizType;
     }
 
@@ -246,8 +441,10 @@
         if (0 === res.code) {
           var sealData = res.data;
           console.log(sealData);
-          //
-
+          // 填表
+          cleanDetailTable();
+          fillDetailTable(sealData);
+          popBox();
 
         } else {
           alert("查询详情失败：" + res.msg);
@@ -256,6 +453,110 @@
     });
 
   }
+
+  // 详情表赋值
+  function fillDetailTable(data){
+
+    if(! (undefined === data.sealDetail)){
+
+      let seal = data.sealDetail;
+      /* 填充单位信息 */
+      $('#apyId').html(seal.applyNum);
+      $('#apySubId').html(seal.applySealNum);
+      $('#useUnitName').html(seal.useUnitName);
+      $('#usScid').html(seal.useUnitCode);
+      $('#useUnitPhone').html(seal.useUnitPhone);
+      $('#useUnitFax').html(seal.useUnitPhone);
+      $('#useUnitZipCode').html(seal.useUnitZipcode);
+      $('#useUnitLegalPersonName').html(seal.useUnitLegalPerson);
+      $('#useUnitLegalPersonPhone').html(seal.useUnitLegalPersonPhone);
+      $('#useUnitLegalPersonID').html(seal.useUnitLegalPersonID);
+      let area = seal.provinceName + '-' + seal.cityName + '-' + seal.countyName;
+      $('#useUnitArea').html(area);
+      $('#useUnitAddress').html(seal.useUnitAddress);
+      /* 填充审批单位 */
+      $('#apprUnitName').html(seal.approveUnitName);
+      $('#operatorName').html(seal.operator);
+      $('#operatorPhone').html(seal.operatorPhone);
+      $('#operatorID').html(seal.operatorId);
+      /* 填充 印章信息 */
+      $('#detailSealName').html(seal.sealName);
+      $('#detailSealCode').html(seal.sealCode);
+      $('#detailValid').html(seal.validStart +' 至 '+ seal.validEnd);
+      $('#sealType').html(seal.sealTypeName);
+      $('#sealColor').html(seal.sealOilName);
+      let imageWidth = seal.imageWidth;
+      let imageHeight = seal.imageHeight;
+      $('#sealSizeWidth').html(imageWidth);
+      $('#sealSizeHeight').html(imageHeight);
+
+      if( ! (undefined == seal.moduleData)){
+        let imageHtml, imageType = seal.imageType;
+        if( imageType == 'png' || imageType == 'PNG'){
+          let imageHtml = "<img src='data:image/png;base64,"+seal.moduleData+"' width='"+( imageWidth * 4 )+"' height='"+( imageHeight * 4)+"' />";
+          $('#sealImage').append(imageHtml);
+        }else if(imageType == 'jpg' || imageType == 'JPG'){
+          let imageHtml = "<img src='data:image/jpg;base64,"+seal.moduleData+"' width='"+( imageWidth * 4 )+"' height='"+( imageHeight * 4)+"' />";
+          $('#sealImage').append(imageHtml);
+        }
+      }else{
+        $('#sealImage').append("<a>未上传图片</a>");
+      }
+
+    }
+
+    if(! (undefined === data.apprInfo)) {
+      let apprInfo = data.apprInfo;
+      let isAppr = (undefined === apprInfo.finTime || apprInfo.finTime <= 0 );
+
+      /* 填充审批信息 */
+      if(!isAppr){
+        $('#detailIsAppr').html("已审批");
+        $('#detailApprInfo').html( apprInfo.retStatus +"- 意见[" + apprInfo.info +"]");
+      }else{
+        $('#detailIsAppr').html("待审批");
+      }
+      $('#detailBizType').html(apprInfo.bizTypeName);
+    }
+
+
+  }
+
+  // 详情表清空
+  function cleanDetailTable(){
+
+    $('#apyId').html("");
+    $('#apySubId').html("");
+    $('#useUnitName').html("");
+    $('#usScid').html("");
+    $('#useUnitPhone').html("");
+    $('#useUnitFax').html("");
+    $('#useUnitZipCode').html("");
+    $('#useUnitLegalPersonName').html("");
+    $('#useUnitLegalPersonPhone').html("");
+    $('#useUnitLegalPersonID').html("");
+    $('#useUnitArea').html("");
+    $('#useUnitAddress').html("");
+    $('#apprUnitName').html("");
+    $('#operatorName').html("");
+    $('#operatorPhone').html("");
+    $('#operatorID').html("");
+    $('#detailSealName').html("");
+    $('#detailSealCode').html("");
+    $('#detailValid').html("");
+    $('#sealType').html("");
+    $('#sealColor').html("");
+    $('#sealSizeWidth').html("");
+    $('#sealSizeHeight').empty();
+    $('#sealImage').html("");
+    $('#detailIsAppr').html("");
+    $('#detailApprInfo').html("");
+
+    /* END */
+
+  }
+
+
 
 
   /**
